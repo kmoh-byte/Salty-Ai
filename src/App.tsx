@@ -105,17 +105,25 @@ export default function App() {
             color: "#fff", textDecoration: "none", padding: "8px 20px",
             borderRadius: 2,
           }}>▶ Watch Demo</a>
-          {["Agents", "Memory", "Stack"].map(item => (
-            <a key={item} href={`#${item.toLowerCase()}`} style={{
-              fontFamily: "system-ui, sans-serif",
-              fontSize: 11, fontWeight: 700,
-              letterSpacing: "0.15em", textTransform: "uppercase",
-              color: "#888", textDecoration: "none",
-            }}
-              onMouseEnter={e => e.target.style.color = "#1a1a1a"}
-              onMouseLeave={e => e.target.style.color = "#888"}
-            >{item}</a>
-          ))}
+{["Agents", "Memory", "Stack"].map(item => (
+  <a
+    key={item}
+    href={`#${item.toLowerCase()}`}
+    style={{
+      fontFamily: "system-ui, sans-serif",
+      fontSize: 11,
+      fontWeight: 700,
+      letterSpacing: "0.15em",
+      textTransform: "uppercase",
+      color: "#888",
+      textDecoration: "none",
+    }}
+    onMouseEnter={e => (e.currentTarget.style.color = "#1a1a1a")}
+    onMouseLeave={e => (e.currentTarget.style.color = "#888")}
+  >
+    {item}
+  </a>
+))}
         </div>
         <div />
       </nav>
