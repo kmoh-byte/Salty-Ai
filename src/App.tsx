@@ -23,40 +23,80 @@ const agents = [
     name: "Salty | Engineering",
     domain: "Technical Systems",
     color: "#C8420A",
-    desc: "RO systems, ZLD, BrineRefine, SaltMaker MVR, and lithium refining documentation. Built for high-consequence design decisions.",
-    tools: ["Knowledge Base", "MCP Filesystem", "Isolated Memory"],
+    desc:
+      "Industrial process intelligence for RO systems, ZLD workflows, thermal systems, and high-consequence engineering decisions.",
+    tools: [
+      "Knowledge Base",
+      "MCP Filesystem",
+      "Isolated Memory",
+    ],
   },
   {
     id: "02",
     name: "Salty | Operations",
     domain: "Process & Safety",
     color: "#1A6B3C",
-    desc: "Plant procedures, maintenance schedules, safety protocols, shift handovers. Operational knowledge that doesn't disappear.",
-    tools: ["Knowledge Base", "Isolated Memory", "Web Search"],
+    desc:
+      "Operational procedures, maintenance workflows, safety documentation, and plant continuity systems.",
+    tools: [
+      "Knowledge Base",
+      "Isolated Memory",
+      "Web Retrieval",
+    ],
   },
   {
     id: "03",
     name: "Salty | Data",
     domain: "Governance & AI",
     color: "#3B2F8C",
-    desc: "Data governance, AI ingestion pipelines, platform management. The agent that manages the other agents.",
-    tools: ["MCP Filesystem", "Isolated Memory", "Knowledge Base"],
+    desc:
+      "AI governance, structured ingestion pipelines, memory orchestration, and enterprise data lifecycle management.",
+    tools: [
+      "MCP Integrations",
+      "Memory Governance",
+      "Knowledge Systems",
+    ],
   },
   {
     id: "04",
     name: "Salty | Developer",
     domain: "Engineering Software",
     color: "#1a1a1a",
-    desc: "Full-stack application development. Scaffolds projects, writes production code, and saves everything directly to K:\\Salty-AI.",
-    tools: ["MCP Filesystem", "Create Directory", "Write Files"],
+    desc:
+      "Production-grade software engineering agent for internal tooling, automation, and enterprise application development.",
+    tools: [
+      "MCP Filesystem",
+      "Project Scaffolding",
+      "Code Generation",
+    ],
   },
 ];
 
 const stack = [
-  { label: "Interface", name: "Open WebUI", note: "Multi-agent chat with pipeline support" },
-  { label: "Inference", name: "Ollama", note: "Local LLM, GPU accelerated" },
-  { label: "Memory", name: "Qdrant", note: "Vector DB, per-agent isolation" },
-  { label: "Tools", name: "MCP / mcpo", note: "Filesystem, extensible via config" },
+  {
+    label: "Architecture",
+    name: "Private AI Infrastructure",
+    note:
+      "Designed for secure on-prem industrial deployment",
+  },
+  {
+    label: "Inference",
+    name: "Accelerated Local Runtime",
+    note:
+      "GPU-optimized model execution with zero cloud dependency",
+  },
+  {
+    label: "Memory",
+    name: "Context Isolation Layer",
+    note:
+      "Agent-scoped retrieval and persistent memory systems",
+  },
+  {
+    label: "Integration",
+    name: "MCP Tooling Framework",
+    note:
+      "Secure filesystem access and enterprise integrations",
+  },
 ];
 
 export default function App() {
