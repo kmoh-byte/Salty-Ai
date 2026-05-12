@@ -17,7 +17,11 @@
   --py: clamp(40px, 7vw, 80px);
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Single source of truth for overflow — only here */
+  overflow-x: hidden;
+}
 
 body {
   margin: 0;
@@ -25,6 +29,7 @@ body {
   color: var(--fg);
   font-family: var(--serif);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 a  { text-decoration: none; color: inherit; }
@@ -32,7 +37,21 @@ button { cursor: pointer; font-family: inherit; }
 img, video { max-width: 100%; display: block; }
 
 /* ── Utilities ─────────────────────────────────────────────────────────────── */
-.wrap { width: 100%; padding-left: var(--px); padding-right: var(--px); }
+/* .wrap adds horizontal page padding. NO overflow:hidden — that would clip
+   children that intentionally scroll (like the agent tab row). */
+.wrap {
+  width: 100%;
+  padding-left: var(--px);
+  padding-right: var(--px);
+}
+
+/* Inner max-width container — sits inside .wrap sections */
+.inner {
+  max-width: 1352px; /* 1400 - 2×24px min-padding */
+  margin: 0 auto;
+}
+
+.push { margin-left: auto; }
 
 .lbl {
   font-family: var(--sans);
@@ -48,8 +67,6 @@ img, video { max-width: 100%; display: block; }
 .lbl-italic { font-style: italic; font-weight: 700; letter-spacing: 0.12em; }
 
 .rule-h  { height: 1px; background: var(--rule); }
-.desk-only { display: none; }
-@media (min-width: 640px) { .desk-only { display: block; } }
 
 /* ── Buttons ───────────────────────────────────────────────────────────────── */
 .btn {
@@ -69,9 +86,9 @@ img, video { max-width: 100%; display: block; }
 .btn-dark    { background: #1a1a1a; color: var(--bg); }
 .btn-outline { background: transparent; color: var(--fg); border: 1.5px solid var(--fg); }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* NAV                                                                        */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   NAV
+   ════════════════════════════════════════════════════════════════════════════ */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -168,6 +185,7 @@ img, video { max-width: 100%; display: block; }
   border-radius: 2px;
   text-align: center;
   margin-bottom: 10px;
+  display: block;
 }
 .drawer-link {
   font-family: var(--sans);
@@ -178,12 +196,13 @@ img, video { max-width: 100%; display: block; }
   color: var(--fg);
   padding: 12px 0;
   border-bottom: 1px solid var(--rule);
+  display: block;
 }
 .drawer-link:last-child { border-bottom: none; }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* HERO                                                                        */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   HERO
+   ════════════════════════════════════════════════════════════════════════════ */
 .hero {
   padding-top: calc(58px + clamp(32px, 6vw, 72px));
   padding-bottom: var(--py);
@@ -197,7 +216,6 @@ img, video { max-width: 100%; display: block; }
   border-bottom: 2px solid var(--fg);
   margin-bottom: clamp(28px, 5vw, 48px);
 }
-.hero-eyebrow .push { margin-left: auto; }
 
 .hero-grid {
   display: grid;
@@ -225,7 +243,6 @@ img, video { max-width: 100%; display: block; }
   line-height: 1.72;
   color: var(--muted);
   margin-bottom: clamp(22px, 4vw, 36px);
-  /* no max-width — was the culprit on mobile */
 }
 .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
 
@@ -247,6 +264,7 @@ img, video { max-width: 100%; display: block; }
   font-family: var(--mono);
   font-size: clamp(11px, 1.5vw, 12px);
   overflow-x: auto;
+  min-width: 0;
 }
 .t-dots { display: flex; gap: 7px; margin-bottom: 14px; }
 .t-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
@@ -254,9 +272,9 @@ img, video { max-width: 100%; display: block; }
 .t-row  { color: #aaa; margin-bottom: 5px; line-height: 1.6; }
 .t-note { color: #555; margin-top: 14px; font-style: italic; font-size: 11px; }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* VIDEO                                                                       */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   VIDEO
+   ════════════════════════════════════════════════════════════════════════════ */
 .demo-sec { padding-bottom: var(--py); }
 .demo-hdr {
   display: flex;
@@ -267,11 +285,6 @@ img, video { max-width: 100%; display: block; }
   margin-bottom: 18px;
 }
 
-/*
-  Key fix: contain:strict stops browser decoding/painting off-screen.
-  aspect-ratio prevents layout shift. No fixed height.
-  video inside fills the box absolutely so height is always correct.
-*/
 .video-shell {
   position: relative;
   width: 100%;
@@ -289,9 +302,9 @@ img, video { max-width: 100%; display: block; }
   object-fit: cover;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* AGENTS                                                                      */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   AGENTS
+   ════════════════════════════════════════════════════════════════════════════ */
 .agents-sec { padding: var(--py) 0; }
 .agents-hdr {
   display: flex;
@@ -309,18 +322,27 @@ img, video { max-width: 100%; display: block; }
   margin-top: 8px;
 }
 
-/* Tabs: flex + min-width so they scroll rather than wrap or clip */
-.agent-tabs {
-  display: flex;
-  border-top: 2px solid var(--fg);
+/* Outer scroll container: full viewport width, padding creates gutters.
+   overflow-x:auto here so the tab strip scrolls inside the padding, not behind it. */
+.agent-tabs-outer {
+  width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  border-top: 2px solid var(--fg);
 }
-.agent-tabs::-webkit-scrollbar { display: none; }
+.agent-tabs-outer::-webkit-scrollbar { display: none; }
+
+/* Tab strip: don't let it shrink below natural size */
+.agent-tabs {
+  display: flex;
+  /* Each tab min 140px so 4 tabs = 560px min — scrolls on mobile, 4-up on desktop */
+  min-width: min-content;
+  padding: 0 var(--px);
+}
 
 .a-tab {
-  flex: 1 0 130px;
+  flex: 1 0 140px;
   background: none;
   border: none;
   border-right: 1px solid var(--rule);
@@ -330,17 +352,18 @@ img, video { max-width: 100%; display: block; }
   flex-direction: column;
   gap: 5px;
   transition: border-bottom 0.15s;
+  cursor: pointer;
 }
 .a-tab:last-child { border-right: none; }
 .a-tab-id   { display: block; }
 .a-tab-name {
   font-family: var(--serif);
-  font-size: clamp(11px, 1.5vw, 14px);
+  font-size: clamp(12px, 1.5vw, 14px);
   color: var(--fg);
   line-height: 1.3;
 }
 
-/* Detail: 1 col mobile, 2 col 768+ */
+/* Detail: 1 col mobile → 2 col 768+ */
 .agent-detail {
   padding-top: clamp(26px, 5vw, 48px);
   border-top: 1px solid var(--rule);
@@ -383,6 +406,9 @@ img, video { max-width: 100%; display: block; }
   border-radius: 4px;
   padding: clamp(16px, 3vw, 26px);
   border-left: 4px solid;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .prompt-text {
   font-family: var(--serif);
@@ -393,9 +419,9 @@ img, video { max-width: 100%; display: block; }
   margin-top: 10px;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* MEMORY                                                                      */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   MEMORY
+   ════════════════════════════════════════════════════════════════════════════ */
 .memory-sec {
   background: #1a1a1a;
   color: #F7F3EC;
@@ -459,6 +485,7 @@ img, video { max-width: 100%; display: block; }
   font-size: clamp(11px, 1.5vw, 12px);
   line-height: 1.8;
   overflow-x: auto;
+  min-width: 0;
 }
 .cb-label {
   font-family: var(--sans);
@@ -469,15 +496,20 @@ img, video { max-width: 100%; display: block; }
   font-weight: 700;
   margin-bottom: 14px;
 }
-.cb-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.cb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7px;
+}
 .cb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.cb-key { color: #ccc; }
+.cb-key { color: #ccc; word-break: break-all; }
 .cb-gate { margin-top: 18px; padding-top: 18px; border-top: 1px solid #2a2a2a; }
 .cb-line { color: #888; }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* STACK                                                                       */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   STACK
+   ════════════════════════════════════════════════════════════════════════════ */
 .stack-sec { padding: var(--py) 0; }
 .stack-hdr {
   display: flex;
@@ -485,7 +517,7 @@ img, video { max-width: 100%; display: block; }
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 0;
+  margin-bottom: clamp(24px, 4vw, 48px);
 }
 
 .stack-grid {
@@ -496,7 +528,7 @@ img, video { max-width: 100%; display: block; }
 @media (min-width: 640px) { .stack-grid { grid-template-columns: repeat(4, 1fr); } }
 
 .stack-card {
-  padding: clamp(16px, 3vw, 26px) clamp(12px, 2vw, 22px);
+  padding: clamp(16px, 3vw, 26px) clamp(10px, 2vw, 22px);
   border-right: 1px solid var(--rule);
 }
 .stack-card:last-child { border-right: none; }
@@ -521,9 +553,9 @@ img, video { max-width: 100%; display: block; }
   line-height: 1.6;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/* FOOTER                                                                      */
-/* ══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════════════════════════════════ */
 .footer {
   border-top: 2px solid var(--fg);
   padding: clamp(18px, 3vw, 26px) var(--px);

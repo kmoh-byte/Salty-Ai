@@ -23,86 +23,53 @@ const agents = [
     name: "Salty | Engineering",
     domain: "Technical Systems",
     color: "#C8420A",
-    desc:
-      "Industrial process intelligence for RO systems, ZLD workflows, thermal systems, and high-consequence engineering decisions.",
-    tools: [
-      "Knowledge Base",
-      "MCP Filesystem",
-      "Isolated Memory",
-    ],
+    desc: "Industrial process intelligence for RO systems, ZLD workflows, thermal systems, and high-consequence engineering decisions.",
+    tools: ["Knowledge Base", "MCP Filesystem", "Isolated Memory"],
   },
   {
     id: "02",
     name: "Salty | Operations",
     domain: "Process & Safety",
     color: "#1A6B3C",
-    desc:
-      "Operational procedures, maintenance workflows, safety documentation, and plant continuity systems.",
-    tools: [
-      "Knowledge Base",
-      "Isolated Memory",
-      "Web Retrieval",
-    ],
+    desc: "Operational procedures, maintenance workflows, safety documentation, and plant continuity systems.",
+    tools: ["Knowledge Base", "Isolated Memory", "Web Retrieval"],
   },
   {
     id: "03",
     name: "Salty | Data",
     domain: "Governance & AI",
     color: "#3B2F8C",
-    desc:
-      "AI governance, structured ingestion pipelines, memory orchestration, and enterprise data lifecycle management.",
-    tools: [
-      "MCP Integrations",
-      "Memory Governance",
-      "Knowledge Systems",
-    ],
+    desc: "AI governance, structured ingestion pipelines, memory orchestration, and enterprise data lifecycle management.",
+    tools: ["MCP Integrations", "Memory Governance", "Knowledge Systems"],
   },
   {
     id: "04",
     name: "Salty | Developer",
     domain: "Engineering Software",
     color: "#1a1a1a",
-    desc:
-      "Production-grade software engineering agent for internal tooling, automation, and enterprise application development.",
-    tools: [
-      "MCP Filesystem",
-      "Project Scaffolding",
-      "Code Generation",
-    ],
+    desc: "Production-grade software engineering agent for internal tooling, automation, and enterprise application development.",
+    tools: ["MCP Filesystem", "Project Scaffolding", "Code Generation"],
   },
 ];
 
 const stack = [
-  {
-    label: "Architecture",
-    name: "Private AI Infrastructure",
-    note:
-      "Designed for secure on-prem industrial deployment",
-  },
-  {
-    label: "Inference",
-    name: "Accelerated Local Runtime",
-    note:
-      "GPU-optimized model execution with zero cloud dependency",
-  },
-  {
-    label: "Memory",
-    name: "Context Isolation Layer",
-    note:
-      "Agent-scoped retrieval and persistent memory systems",
-  },
-  {
-    label: "Integration",
-    name: "MCP Tooling Framework",
-    note:
-      "Secure filesystem access and enterprise integrations",
-  },
+  { label: "Architecture", name: "Private AI Infrastructure", note: "Designed for secure on-prem industrial deployment" },
+  { label: "Inference", name: "Accelerated Local Runtime", note: "GPU-optimized model execution with zero cloud dependency" },
+  { label: "Memory", name: "Context Isolation Layer", note: "Agent-scoped retrieval and persistent memory systems" },
+  { label: "Integration", name: "MCP Tooling Framework", note: "Secure filesystem access and enterprise integrations" },
 ];
+
+const systemPrompts = {
+  "01": "You are Salty, the Saltworks Engineering AI assistant. You help engineers with system design, technical documentation, RO systems, ZLD, BrineRefine, SaltMaker MVR, and lithium refining...",
+  "02": "You help operations staff with process plant procedures, maintenance schedules, safety protocols, shift handovers, and daily operational decisions...",
+  "03": "You are the Saltworks Data Systems AI. You structure organizational data for AI ingestion, manage the platform, define governance, and train staff...",
+  "04": "You design and build production-grade software. You have direct filesystem access. You do not show code — you write it to disk, scaffold the project, and confirm it's done...",
+};
 
 export default function App() {
   const [active, setActive] = useState(0);
   const [scrollY, setScrollY] = useState(0);
-  const heroRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -113,159 +80,88 @@ export default function App() {
   const navOpaque = scrollY > 60;
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#F7F3EC",
-      color: "#1a1a1a",
-      fontFamily: "'Georgia', 'Times New Roman', serif",
-      overflowX: "hidden",
-    }}>
+    <div style={{ minHeight: "100vh", background: "#F7F3EC", color: "#1a1a1a", fontFamily: "'Georgia', 'Times New Roman', serif", overflowX: "hidden" }}>
 
       {/* NAV */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 48px", height: 64,
-        background: navOpaque ? "rgba(247,243,236,0.95)" : "transparent",
-        backdropFilter: navOpaque ? "blur(12px)" : "none",
-        borderBottom: navOpaque ? "1px solid rgba(0,0,0,0.08)" : "none",
-        transition: "all 0.4s ease",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <SaltyMark size={22} />
-          <span style={{ fontFamily: "Georgia, serif", fontSize: 16, fontWeight: 400, letterSpacing: "0.02em" }}>
-            Salty AI
-          </span>
+      <nav className={`nav${navOpaque ? " scrolled" : ""}`}>
+        <div className="nav-brand">
+          <SaltyMark size={20} />
+          <span>Salty AI</span>
         </div>
-        <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-          <a href="#demo" style={{
-            fontFamily: "system-ui, sans-serif",
-            fontSize: 11, fontWeight: 800, letterSpacing: "0.15em",
-            textTransform: "uppercase", background: "#C8420A",
-            color: "#fff", textDecoration: "none", padding: "8px 20px",
-            borderRadius: 2,
-          }}>▶ Watch Demo</a>
-{["Agents", "Memory", "Stack"].map(item => (
-  <a
-    key={item}
-    href={`#${item.toLowerCase()}`}
-    style={{
-      fontFamily: "system-ui, sans-serif",
-      fontSize: 11,
-      fontWeight: 700,
-      letterSpacing: "0.15em",
-      textTransform: "uppercase",
-      color: "#888",
-      textDecoration: "none",
-    }}
-    onMouseEnter={e => (e.currentTarget.style.color = "#1a1a1a")}
-    onMouseLeave={e => (e.currentTarget.style.color = "#888")}
-  >
-    {item}
-  </a>
-))}
+
+        {/* Desktop links */}
+        <div className="nav-links">
+          <a href="#demo" className="nav-cta btn">▶ Watch Demo</a>
+          {["Agents", "Memory", "Stack"].map(item => (
+            <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>
+          ))}
         </div>
-        <div />
+
+        {/* Hamburger */}
+        <button
+          className="hamburger"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMenuOpen(o => !o)}
+        >
+          <span className={`hbar hbar-1${menuOpen ? " open" : ""}`} />
+          <span className={`hbar hbar-2${menuOpen ? " open" : ""}`} />
+          <span className={`hbar hbar-3${menuOpen ? " open" : ""}`} />
+        </button>
       </nav>
 
-      {/* HERO — Editorial masthead layout */}
-      <header ref={heroRef} style={{ paddingTop: 120, paddingBottom: 80, paddingLeft: 48, paddingRight: 48, maxWidth: 1400, margin: "0 auto" }}>
+      {/* Mobile drawer */}
+      <div className={`drawer${menuOpen ? " open" : ""}`}>
+        <div className="drawer-inner">
+          <a href="#demo" className="drawer-cta" onClick={() => setMenuOpen(false)}>▶ Watch Demo</a>
+          {["Agents", "Memory", "Stack"].map(item => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="drawer-link" onClick={() => setMenuOpen(false)}>{item}</a>
+          ))}
+        </div>
+      </div>
 
-        {/* Issue line */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 24,
-          marginBottom: 48, paddingBottom: 16,
-          borderBottom: "2px solid #1a1a1a",
-        }}>
-          <SaltyMark size={18} />
-          <span style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.25em", textTransform: "uppercase", color: "#888" }}>
-            Saltworks Engineering Intelligence
-          </span>
-          <span style={{ marginLeft: "auto", fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#C8420A" }}>
-            Local · Private · Industrial Grade
-          </span>
+      {/* HERO */}
+      <header className="hero wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+
+        {/* Eyebrow / issue line */}
+        <div className="hero-eyebrow">
+          <SaltyMark size={16} />
+          <span className="lbl lbl-dim">Saltworks Engineering Intelligence</span>
+          <span className="lbl lbl-red push" style={{ fontStyle: "normal" }}>Local · Private · Industrial Grade</span>
         </div>
 
         {/* Masthead grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, alignItems: "start" }}>
+        <div className="hero-grid">
 
-          {/* Left — Giant headline */}
-          <div style={{ paddingRight: 64, borderRight: "1px solid #D5D0C8" }}>
-            <p style={{
-              fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800,
-              letterSpacing: "0.2em", textTransform: "uppercase",
-              color: "#C8420A", marginBottom: 24,
-            }}>
-              Enterprise AI Platform — Vol. I
-            </p>
-            <h1 style={{
-              fontSize: "clamp(52px, 6vw, 88px)",
-              fontFamily: "Georgia, serif",
-              fontWeight: 400,
-              lineHeight: 1.0,
-              letterSpacing: "-0.02em",
-              margin: "0 0 32px",
-            }}>
+          {/* Left */}
+          <div className="hero-left">
+            <p className="lbl lbl-red" style={{ marginBottom: 20 }}>Enterprise AI Platform — Vol. I</p>
+            <h1 className="hero-h1">
               AI that knows your{" "}
-              <span style={{ fontStyle: "italic", color: "#C8420A" }}>
-                engineering
-              </span>{" "}
+              <em>engineering</em>{" "}
               standards.
             </h1>
-            <p style={{
-              fontSize: 18, fontFamily: "Georgia, serif",
-              fontWeight: 400, lineHeight: 1.7,
-              color: "#4a4540", marginBottom: 40, maxWidth: 480,
-            }}>
+            <p className="hero-p">
               A locally-hosted, multi-agent AI platform built for Saltworks engineers.
               Your best engineers know things that aren't written down anywhere. Now that knowledge stays.
             </p>
-            <div style={{ display: "flex", gap: 16 }}>
-              <button style={{
-                fontFamily: "system-ui, sans-serif",
-                fontSize: 11, fontWeight: 800, letterSpacing: "0.15em",
-                textTransform: "uppercase", background: "#1a1a1a",
-                color: "#F7F3EC", border: "none", padding: "14px 32px",
-                borderRadius: 2, cursor: "pointer",
-              }}>
-                Explore Architecture →
-              </button>
-              <button style={{
-                fontFamily: "system-ui, sans-serif",
-                fontSize: 11, fontWeight: 800, letterSpacing: "0.15em",
-                textTransform: "uppercase", background: "transparent",
-                color: "#1a1a1a", border: "1.5px solid #1a1a1a",
-                padding: "14px 32px", borderRadius: 2, cursor: "pointer",
-              }}>
-                Read Docs
-              </button>
+            <div className="hero-btns">
+              <button className="btn btn-dark">Explore Architecture →</button>
+              <button className="btn btn-outline">Read Docs</button>
             </div>
           </div>
 
-          {/* Right — Pull quote + terminal */}
-          <div style={{ paddingLeft: 64 }}>
-            {/* Pull quote */}
-            <blockquote style={{
-              borderLeft: "3px solid #C8420A",
-              paddingLeft: 24, marginBottom: 40,
-              fontFamily: "Georgia, serif",
-              fontSize: 22, fontStyle: "italic",
-              lineHeight: 1.5, color: "#3a3530",
-            }}>
+          {/* Right */}
+          <div>
+            <blockquote className="pullquote">
               "What happens when your senior engineer retires? Salty already asked them everything."
             </blockquote>
-
-            {/* Terminal */}
-            <div style={{
-              background: "#1a1a1a", borderRadius: 4,
-              padding: "24px 28px", fontFamily: "monospace", fontSize: 12,
-            }}>
-              <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57" }} />
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
+            <div className="terminal">
+              <div className="t-dots">
+                <div className="t-dot" style={{ background: "#ff5f57" }} />
+                <div className="t-dot" style={{ background: "#febc2e" }} />
+                <div className="t-dot" style={{ background: "#28c840" }} />
               </div>
-              <p style={{ color: "#C8420A", margin: "0 0 12px", fontWeight: "bold" }}>➜ salty-ai --status</p>
+              <p className="t-cmd">➜ salty-ai --status</p>
               {[
                 ["Backend", "Ollama + Docker", "#4ade80"],
                 ["GPU", "NVIDIA CUDA ✓", "#4ade80"],
@@ -273,154 +169,102 @@ export default function App() {
                 ["Filesystem", "K:\\Salty-AI ✓", "#4ade80"],
                 ["Data Leakage", "Zero — Local Only", "#4ade80"],
               ].map(([k, v, c]) => (
-                <p key={k} style={{ color: "#aaa", margin: "0 0 6px" }}>
+                <p key={k} className="t-row">
                   {k}: <span style={{ color: c }}>{v}</span>
                 </p>
               ))}
-              <p style={{ color: "#555", margin: "16px 0 0", fontStyle: "italic", fontSize: 11 }}># ready for engineering query...</p>
+              <p className="t-note"># ready for engineering query...</p>
             </div>
           </div>
         </div>
       </header>
 
       {/* VIDEO DEMO */}
-      <section id="demo" style={{ padding: "0 48px 80px", maxWidth: 1400, margin: "0 auto" }}>
-        <div style={{ borderTop: "2px solid #1a1a1a", paddingTop: 48 }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
-            <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C8420A", margin: 0 }}>
-              Live Demo
-            </p>
-            <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#888", margin: 0 }}>
-              Salty | Engineering · Knowledge Base · Memory · Filesystem
-            </p>
+      <section id="demo" className="demo-sec wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div style={{ borderTop: "2px solid #1a1a1a", paddingTop: "clamp(28px, 4vw, 48px)" }}>
+          <div className="demo-hdr">
+            <span className="lbl lbl-red">Live Demo</span>
+            <span className="lbl lbl-dim">Salty | Engineering · Knowledge Base · Memory · Filesystem</span>
           </div>
-          <div style={{
-            background: "#1a1a1a", borderRadius: 4, overflow: "hidden",
-            aspectRatio: "16/9", width: "100%",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-	<video
-	  src="/0508(1).mp4"
-  	controls
-  	style={{ width: "100%", height: "100%", display: "block" }}
-	/>
+          <div className="video-shell">
+            <video src="/0508(1).mp4" controls />
           </div>
         </div>
       </section>
 
-      {/* RULE */}
-      <div style={{ height: 1, background: "#D5D0C8", margin: "0 48px" }} />
+      <div className="rule-h wrap" style={{ maxWidth: "none" }} />
 
-      {/* AGENTS — Editorial card spread */}
-      <section id="agents" style={{ padding: "80px 48px", maxWidth: 1400, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 48 }}>
-          <div>
-            <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#C8420A", margin: "0 0 8px", fontStyle: "italic" }}>
-              "Build, test, and deploy agents with security best practices and clear functional separation" — Saltworks AI Specialist
-            </p>
-            <h2 style={{ fontFamily: "Georgia, serif", fontSize: 42, fontWeight: 400, letterSpacing: "-0.02em", margin: 0 }}>
-              Specialized Agent Library
-            </h2>
+      {/* AGENTS */}
+      <section id="agents" className="agents-sec">
+        {/* Header — padded */}
+        <div className="wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <div className="agents-hdr">
+            <div>
+              <p className="lbl lbl-red lbl-italic" style={{ marginBottom: 8 }}>
+                "Build, test, and deploy agents with security best practices and clear functional separation" — Saltworks AI Specialist
+              </p>
+              <h2 className="section-h2">Specialized Agent Library</h2>
+            </div>
+            <span className="lbl lbl-dim">Four Agents · One Platform</span>
           </div>
-          <span style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#888" }}>
-            Four Agents · One Platform
-          </span>
         </div>
 
-        {/* Agent selector — editorial tabs */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: "2px solid #1a1a1a", marginBottom: 0 }}>
-          {agents.map((a, i) => (
-            <button key={a.id} onClick={() => setActive(i)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              padding: "20px 24px", textAlign: "left",
-              borderRight: i < 3 ? "1px solid #D5D0C8" : "none",
-              borderBottom: active === i ? `3px solid ${a.color}` : "3px solid transparent",
-              transition: "border-color 0.2s",
-            }}>
-              <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: active === i ? a.color : "#888", margin: "0 0 6px" }}>
-                {a.id}
-              </p>
-              <p style={{ fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 400, color: "#1a1a1a", margin: 0, lineHeight: 1.3 }}>
-                {a.name}
-              </p>
-            </button>
-          ))}
+        {/* Tabs — full-width scroll container, padding inside each tab */}
+        <div className="agent-tabs-outer">
+          <div className="agent-tabs">
+            {agents.map((a, i) => (
+              <button
+                key={a.id}
+                className="a-tab"
+                onClick={() => setActive(i)}
+                style={{ borderBottom: active === i ? `3px solid ${a.color}` : "3px solid transparent" }}
+              >
+                <span className="lbl a-tab-id" style={{ color: active === i ? a.color : "#888" }}>{a.id}</span>
+                <span className="a-tab-name">{a.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Active agent detail */}
-        <div style={{
-          borderTop: "1px solid #D5D0C8",
-          padding: "48px 0",
-          display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80,
-        }}>
-          <div>
-            <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: agents[active].color, marginBottom: 16 }}>
-              {agents[active].domain}
-            </p>
-            <h3 style={{ fontFamily: "Georgia, serif", fontSize: 36, fontWeight: 400, letterSpacing: "-0.02em", margin: "0 0 24px", lineHeight: 1.1 }}>
-              {agents[active].name}
-            </h3>
-            <p style={{ fontFamily: "Georgia, serif", fontSize: 18, lineHeight: 1.7, color: "#4a4540", margin: "0 0 32px" }}>
-              {agents[active].desc}
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {agents[active].tools.map(t => (
-                <span key={t} style={{
-                  fontFamily: "system-ui, sans-serif",
-                  fontSize: 10, fontWeight: 800, letterSpacing: "0.15em",
-                  textTransform: "uppercase", padding: "6px 14px",
-                  border: `1.5px solid ${agents[active].color}`,
-                  color: agents[active].color, borderRadius: 2,
-                }}>
-                  {t}
-                </span>
-              ))}
+        {/* Detail — padded */}
+        <div className="wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <div className="agent-detail">
+            <div>
+              <p className="lbl" style={{ color: agents[active].color, marginBottom: 10 }}>{agents[active].domain}</p>
+              <h3 className="agent-name">{agents[active].name}</h3>
+              <p className="agent-desc">{agents[active].desc}</p>
+              <div className="agent-tools">
+                {agents[active].tools.map(t => (
+                  <span key={t} className="tool-pill" style={{ borderColor: agents[active].color, color: agents[active].color }}>{t}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="prompt-box" style={{ borderLeftColor: agents[active].color }}>
+              <p className="lbl lbl-dim" style={{ marginBottom: 10 }}>System Prompt — {agents[active].name}</p>
+              <p className="prompt-text">"{systemPrompts[agents[active].id]}"</p>
             </div>
           </div>
-
-          {/* Agent system prompt preview */}
-          <div style={{
-            background: "#F0EBE3", borderRadius: 4, padding: "32px",
-            borderLeft: `4px solid ${agents[active].color}`,
-          }}>
-            <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#888", marginBottom: 16 }}>
-              System Prompt — {agents[active].name}
-            </p>
-            <p style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 16, lineHeight: 1.7, color: "#3a3530" }}>
-              "{agents[active].id === "01"
-                ? "You are Salty, the Saltworks Engineering AI assistant. You help engineers with system design, technical documentation, RO systems, ZLD, BrineRefine, SaltMaker MVR, and lithium refining..."
-                : agents[active].id === "02"
-                ? "You help operations staff with process plant procedures, maintenance schedules, safety protocols, shift handovers, and daily operational decisions..."
-                : agents[active].id === "03"
-                ? "You are the Saltworks Data Systems AI. You structure organizational data for AI ingestion, manage the platform, define governance, and train staff..."
-                : "You design and build production-grade software. You have direct filesystem access. You do not show code — you write it to disk, scaffold the project, and confirm it's done..."
-              }"
-            </p>
-          </div>
         </div>
       </section>
 
-      {/* RULE */}
-      <div style={{ height: 1, background: "#D5D0C8", margin: "0 48px" }} />
+      <div className="rule-h" />
 
-      {/* MEMORY — Full width editorial */}
-      <section id="memory" style={{ background: "#1a1a1a", color: "#F7F3EC", padding: "80px 48px" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+      {/* MEMORY */}
+      <section id="memory" className="memory-sec">
+        <div className="wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <div className="memory-grid">
             <div>
-              <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C8420A", marginBottom: 8 }}>
-                Memory Pipeline — v3.0
-              </p>
-              <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#666", marginBottom: 24, fontStyle: "italic" }}>
+              <p className="lbl lbl-red" style={{ marginBottom: 8 }}>Memory Pipeline — v3.0</p>
+              <p className="lbl lbl-italic" style={{ color: "#666", marginBottom: 20 }}>
                 "Own AI-related data privacy, access controls, and security governance" — Saltworks AI Specialist
               </p>
-              <h2 style={{ fontFamily: "Georgia, serif", fontSize: 48, fontWeight: 400, letterSpacing: "-0.02em", lineHeight: 1.05, margin: "0 0 32px" }}>
+              <h2 className="memory-h2">
                 Memory that doesn't{" "}
-                <span style={{ fontStyle: "italic", color: "#C8420A" }}>bleed</span>{" "}
+                <em>bleed</em>{" "}
                 between agents.
               </h2>
-              <p style={{ fontFamily: "Georgia, serif", fontSize: 17, lineHeight: 1.75, color: "#aaa", marginBottom: 40 }}>
+              <p className="memory-p">
                 Each user-agent pair gets a completely isolated memory pool in Qdrant.
                 A secondary LLM validation layer prevents knowledge base content from
                 polluting personal context — a problem that kills most naive RAG deployments.
@@ -432,87 +276,68 @@ export default function App() {
                 ["Relevance filter", "Memories screened before injection"],
                 ["Zero cross-bleed", "Engineering never sees Operations context"],
               ].map(([title, desc]) => (
-                <div key={title} style={{ display: "flex", gap: 20, marginBottom: 20, paddingBottom: 20, borderBottom: "1px solid #333" }}>
-                  <span style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", color: "#C8420A", minWidth: 100, paddingTop: 2 }}>{title}</span>
-                  <span style={{ fontFamily: "Georgia, serif", fontSize: 15, color: "#bbb", lineHeight: 1.5 }}>{desc}</span>
+                <div key={title} className="mem-feat">
+                  <span className="mem-lbl">{title}</span>
+                  <span className="mem-desc">{desc}</span>
                 </div>
               ))}
             </div>
 
             {/* Memory key diagram */}
-            <div>
-              <div style={{ background: "#111", borderRadius: 4, padding: 32, fontFamily: "monospace", fontSize: 13, lineHeight: 1.8 }}>
-                <p style={{ color: "#555", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 20 }}>Qdrant Memory Keys</p>
-                {[
-                  ["47b01a16...__ salty-engineering", "#C8420A"],
-                  ["47b01a16...__salty-operations", "#4ade80"],
-                  ["47b01a16...__salty-data", "#a78bfa"],
-                  ["47b01a16...__salty-developer", "#60a5fa"],
-                ].map(([key, color]) => (
-                  <div key={key} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
-                    <span style={{ color: "#ccc" }}>{key}</span>
-                  </div>
-                ))}
-                <div style={{ marginTop: 24, paddingTop: 24, borderTop: "1px solid #333" }}>
-                  <p style={{ color: "#555", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 12 }}>LLM Save Gate</p>
-                  <p style={{ color: "#888", margin: 0 }}>if <span style={{ color: "#C8420A" }}>_should_save</span>(user, assistant):</p>
-                  <p style={{ color: "#888", margin: 0, paddingLeft: 20 }}>memory.<span style={{ color: "#4ade80" }}>add</span>(turn, key)</p>
-                  <p style={{ color: "#888", margin: 0 }}>else: <span style={{ color: "#555" }}># KB content — skip ✓</span></p>
+            <div className="codeblock">
+              <p className="cb-label">Qdrant Memory Keys</p>
+              {[
+                ["47b01a16...__ salty-engineering", "#C8420A"],
+                ["47b01a16...__salty-operations", "#4ade80"],
+                ["47b01a16...__salty-data", "#a78bfa"],
+                ["47b01a16...__salty-developer", "#60a5fa"],
+              ].map(([key, color]) => (
+                <div key={key} className="cb-row">
+                  <div className="cb-dot" style={{ background: color }} />
+                  <span className="cb-key">{key}</span>
                 </div>
+              ))}
+              <div className="cb-gate">
+                <p className="cb-label" style={{ marginBottom: 10 }}>LLM Save Gate</p>
+                <p className="cb-line">if <span style={{ color: "#C8420A" }}>_should_save</span>(user, assistant):</p>
+                <p className="cb-line" style={{ paddingLeft: 20 }}>memory.<span style={{ color: "#4ade80" }}>add</span>(turn, key)</p>
+                <p className="cb-line">else: <span style={{ color: "#555" }}># KB content — skip ✓</span></p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* STACK — Horizontal rule layout */}
-      <section id="stack" style={{ padding: "80px 48px", maxWidth: 1400, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 48 }}>
+      {/* STACK */}
+      <section id="stack" className="stack-sec wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div className="stack-hdr" style={{ marginBottom: "clamp(0px, 0px, 0px)" }}>
           <div>
-            <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#C8420A", margin: "0 0 8px", fontStyle: "italic" }}>
+            <p className="lbl lbl-red lbl-italic" style={{ marginBottom: 8 }}>
               "Familiarity with AI libraries and communication protocols — MCP, SDKs" — Saltworks AI Specialist
             </p>
-            <h2 style={{ fontFamily: "Georgia, serif", fontSize: 42, fontWeight: 400, letterSpacing: "-0.02em", margin: 0 }}>
-              Hardened local stack.
-            </h2>
+            <h2 className="section-h2">Hardened local stack.</h2>
           </div>
-          <span style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#888" }}>
-            Zero Cloud Dependencies
-          </span>
+          <span className="lbl lbl-dim">Zero Cloud Dependencies</span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+        <div className="stack-grid" style={{ marginTop: "clamp(24px, 4vw, 48px)" }}>
           {stack.map((s, i) => (
-            <div key={s.name} style={{
-              padding: "32px 32px 32px 0",
-              borderRight: i < 3 ? "1px solid #D5D0C8" : "none",
-              paddingLeft: i > 0 ? 32 : 0,
-              borderTop: "2px solid #1a1a1a",
-            }}>
-              <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C8420A", margin: "0 0 16px" }}>
-                {s.label}
-              </p>
-              <p style={{ fontFamily: "Georgia, serif", fontSize: 28, fontWeight: 400, margin: "0 0 12px", letterSpacing: "-0.02em" }}>
-                {s.name}
-              </p>
-              <p style={{ fontFamily: "Georgia, serif", fontSize: 14, color: "#666", lineHeight: 1.6, margin: 0 }}>
-                {s.note}
-              </p>
+            <div key={s.name} className="stack-card">
+              <p className="lbl lbl-red" style={{ marginBottom: 12 }}>{s.label}</p>
+              <p className="stack-name">{s.name}</p>
+              <p className="stack-note">{s.note}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer style={{ borderTop: "2px solid #1a1a1a", padding: "32px 48px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <SaltyMark size={20} />
-          <span style={{ fontFamily: "Georgia, serif", fontSize: 15 }}>Salty AI</span>
+      <footer className="footer">
+        <div className="footer-brand">
+          <SaltyMark size={18} />
+          <span>Salty AI</span>
         </div>
-        <p style={{ fontFamily: "system-ui, sans-serif", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase", color: "#888", margin: 0 }}>
-          © 2026 · Built for Saltworks Engineering Intelligence
-        </p>
+        <p className="lbl lbl-dim">© 2026 · Built for Saltworks Engineering Intelligence</p>
       </footer>
     </div>
   );
