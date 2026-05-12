@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-const SaltyMark = ({ size = 32, className = "" }) => (
+const SaltyMark = ({ size = 32, className = "" }: { size?: number; className?: string }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" className={className} aria-hidden="true">
     <circle cx="38" cy="52" r="16" />
     <ellipse cx="38" cy="18" rx="5" ry="10" />
@@ -59,7 +59,7 @@ const stack = [
   { label: "Integration", name: "MCP Tooling Framework", note: "Secure filesystem access and enterprise integrations" },
 ];
 
-const systemPrompts = {
+const systemPrompts: Record<string, string> = {
   "01": "You are Salty, the Saltworks Engineering AI assistant. You help engineers with system design, technical documentation, RO systems, ZLD, BrineRefine, SaltMaker MVR, and lithium refining...",
   "02": "You help operations staff with process plant procedures, maintenance schedules, safety protocols, shift handovers, and daily operational decisions...",
   "03": "You are the Saltworks Data Systems AI. You structure organizational data for AI ingestion, manage the platform, define governance, and train staff...",
@@ -80,7 +80,7 @@ export default function App() {
   const navOpaque = scrollY > 60;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F7F3EC", color: "#1a1a1a", fontFamily: "'Georgia', 'Times New Roman', serif", overflowX: "hidden" }}>
+    <div className="page-root">
 
       {/* NAV */}
       <nav className={`nav${navOpaque ? " scrolled" : ""}`}>
@@ -88,16 +88,12 @@ export default function App() {
           <SaltyMark size={20} />
           <span>Salty AI</span>
         </div>
-
-        {/* Desktop links */}
         <div className="nav-links">
           <a href="#demo" className="nav-cta btn">▶ Watch Demo</a>
           {["Agents", "Memory", "Stack"].map(item => (
             <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>
           ))}
         </div>
-
-        {/* Hamburger */}
         <button
           className="hamburger"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -109,7 +105,7 @@ export default function App() {
         </button>
       </nav>
 
-      {/* Mobile drawer */}
+      {/* MOBILE DRAWER */}
       <div className={`drawer${menuOpen ? " open" : ""}`}>
         <div className="drawer-inner">
           <a href="#demo" className="drawer-cta" onClick={() => setMenuOpen(false)}>▶ Watch Demo</a>
@@ -120,25 +116,17 @@ export default function App() {
       </div>
 
       {/* HERO */}
-      <header className="hero wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
-
-        {/* Eyebrow / issue line */}
+      <header className="hero wrap">
         <div className="hero-eyebrow">
           <SaltyMark size={16} />
           <span className="lbl lbl-dim">Saltworks Engineering Intelligence</span>
-          <span className="lbl lbl-red push" style={{ fontStyle: "normal" }}>Local · Private · Industrial Grade</span>
+          <span className="lbl lbl-red push">Local · Private · Industrial Grade</span>
         </div>
-
-        {/* Masthead grid */}
         <div className="hero-grid">
-
-          {/* Left */}
           <div className="hero-left">
             <p className="lbl lbl-red" style={{ marginBottom: 20 }}>Enterprise AI Platform — Vol. I</p>
             <h1 className="hero-h1">
-              AI that knows your{" "}
-              <em>engineering</em>{" "}
-              standards.
+              AI that knows your <em>engineering</em> standards.
             </h1>
             <p className="hero-p">
               A locally-hosted, multi-agent AI platform built for Saltworks engineers.
@@ -149,8 +137,6 @@ export default function App() {
               <button className="btn btn-outline">Read Docs</button>
             </div>
           </div>
-
-          {/* Right */}
           <div>
             <blockquote className="pullquote">
               "What happens when your senior engineer retires? Salty already asked them everything."
@@ -180,8 +166,8 @@ export default function App() {
       </header>
 
       {/* VIDEO DEMO */}
-      <section id="demo" className="demo-sec wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
-        <div style={{ borderTop: "2px solid #1a1a1a", paddingTop: "clamp(28px, 4vw, 48px)" }}>
+      <section id="demo" className="demo-sec wrap">
+        <div className="demo-top-border">
           <div className="demo-hdr">
             <span className="lbl lbl-red">Live Demo</span>
             <span className="lbl lbl-dim">Salty | Engineering · Knowledge Base · Memory · Filesystem</span>
@@ -192,12 +178,11 @@ export default function App() {
         </div>
       </section>
 
-      <div className="rule-h wrap" style={{ maxWidth: "none" }} />
+      <div className="rule-h" />
 
       {/* AGENTS */}
       <section id="agents" className="agents-sec">
-        {/* Header — padded */}
-        <div className="wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div className="wrap">
           <div className="agents-hdr">
             <div>
               <p className="lbl lbl-red lbl-italic" style={{ marginBottom: 8 }}>
@@ -209,7 +194,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tabs — full-width scroll container, padding inside each tab */}
         <div className="agent-tabs-outer">
           <div className="agent-tabs">
             {agents.map((a, i) => (
@@ -226,8 +210,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Detail — padded */}
-        <div className="wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div className="wrap">
           <div className="agent-detail">
             <div>
               <p className="lbl" style={{ color: agents[active].color, marginBottom: 10 }}>{agents[active].domain}</p>
@@ -239,7 +222,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-
             <div className="prompt-box" style={{ borderLeftColor: agents[active].color }}>
               <p className="lbl lbl-dim" style={{ marginBottom: 10 }}>System Prompt — {agents[active].name}</p>
               <p className="prompt-text">"{systemPrompts[agents[active].id]}"</p>
@@ -252,7 +234,7 @@ export default function App() {
 
       {/* MEMORY */}
       <section id="memory" className="memory-sec">
-        <div className="wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div className="wrap">
           <div className="memory-grid">
             <div>
               <p className="lbl lbl-red" style={{ marginBottom: 8 }}>Memory Pipeline — v3.0</p>
@@ -260,16 +242,13 @@ export default function App() {
                 "Own AI-related data privacy, access controls, and security governance" — Saltworks AI Specialist
               </p>
               <h2 className="memory-h2">
-                Memory that doesn't{" "}
-                <em>bleed</em>{" "}
-                between agents.
+                Memory that doesn't <em>bleed</em> between agents.
               </h2>
               <p className="memory-p">
                 Each user-agent pair gets a completely isolated memory pool in Qdrant.
                 A secondary LLM validation layer prevents knowledge base content from
                 polluting personal context — a problem that kills most naive RAG deployments.
               </p>
-
               {[
                 ["Isolated keys", "Per-model UUID__model_id memory scoping"],
                 ["LLM save gate", "Secondary model validates before persisting"],
@@ -282,8 +261,6 @@ export default function App() {
                 </div>
               ))}
             </div>
-
-            {/* Memory key diagram */}
             <div className="codeblock">
               <p className="cb-label">Qdrant Memory Keys</p>
               {[
@@ -309,8 +286,8 @@ export default function App() {
       </section>
 
       {/* STACK */}
-      <section id="stack" className="stack-sec wrap" style={{ maxWidth: 1400, margin: "0 auto" }}>
-        <div className="stack-hdr" style={{ marginBottom: "clamp(0px, 0px, 0px)" }}>
+      <section id="stack" className="stack-sec wrap">
+        <div className="stack-hdr">
           <div>
             <p className="lbl lbl-red lbl-italic" style={{ marginBottom: 8 }}>
               "Familiarity with AI libraries and communication protocols — MCP, SDKs" — Saltworks AI Specialist
@@ -319,9 +296,8 @@ export default function App() {
           </div>
           <span className="lbl lbl-dim">Zero Cloud Dependencies</span>
         </div>
-
-        <div className="stack-grid" style={{ marginTop: "clamp(24px, 4vw, 48px)" }}>
-          {stack.map((s, i) => (
+        <div className="stack-grid">
+          {stack.map((s) => (
             <div key={s.name} className="stack-card">
               <p className="lbl lbl-red" style={{ marginBottom: 12 }}>{s.label}</p>
               <p className="stack-name">{s.name}</p>
@@ -339,6 +315,7 @@ export default function App() {
         </div>
         <p className="lbl lbl-dim">© 2026 · Built for Saltworks Engineering Intelligence</p>
       </footer>
+
     </div>
   );
 }
