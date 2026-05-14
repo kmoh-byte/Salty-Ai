@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const SaltyMark = ({ size = 32, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="currentColor" className={className} aria-hidden="true">
@@ -19,7 +19,7 @@ const SaltyMark = ({ size = 32, className = "" }) => (
 
 const agents = [
   {
-    id: "01",
+    id: "01" as const,
     name: "Salty | Engineering",
     domain: "Technical Systems",
     color: "#C8420A",
@@ -27,7 +27,7 @@ const agents = [
     tools: ["Knowledge Base", "MCP Filesystem", "Isolated Memory"],
   },
   {
-    id: "02",
+    id: "02" as const,
     name: "Salty | Operations",
     domain: "Process & Safety",
     color: "#1A6B3C",
@@ -35,7 +35,7 @@ const agents = [
     tools: ["Knowledge Base", "Isolated Memory", "Web Retrieval"],
   },
   {
-    id: "03",
+    id: "03" as const,
     name: "Salty | Data",
     domain: "Governance & AI",
     color: "#3B2F8C",
@@ -43,7 +43,7 @@ const agents = [
     tools: ["MCP Integrations", "Memory Governance", "Knowledge Systems"],
   },
   {
-    id: "04",
+    id: "04" as const,
     name: "Salty | Developer",
     domain: "Engineering Software",
     color: "#1a1a1a",
@@ -59,7 +59,7 @@ const stack = [
   { label: "Integration", name: "MCP Tooling Framework", note: "Secure filesystem access and enterprise integrations" },
 ];
 
-const systemPrompts = {
+const systemPrompts: Record<"01" | "02" | "03" | "04", string> = {
   "01": "You are Salty, the Saltworks Engineering AI assistant. You help engineers with system design, technical documentation, RO systems, ZLD, BrineRefine, SaltMaker MVR, and lithium refining...",
   "02": "You help operations staff with process plant procedures, maintenance schedules, safety protocols, shift handovers, and daily operational decisions...",
   "03": "You are the Saltworks Data Systems AI. You structure organizational data for AI ingestion, manage the platform, define governance, and train staff...",
@@ -213,17 +213,47 @@ export default function App() {
         {/* Tabs — full-width scroll container, padding inside each tab */}
         <div className="agent-tabs-outer">
           <div className="agent-tabs">
-            {agents.map((a, i) => (
-              <button
-                key={a.id}
-                className="a-tab"
-                onClick={() => setActive(i)}
-                style={{ borderBottom: active === i ? `3px solid ${a.color}` : "3px solid transparent" }}
-              >
-                <span className="lbl a-tab-id" style={{ color: active === i ? a.color : "#888" }}>{a.id}</span>
-                <span className="a-tab-name">{a.name}</span>
-              </button>
-            ))}
+{agents.map((a, i) => (
+  <div
+    key={a.id}
+    className="a-tab"
+    style={{
+      borderBottom: active === i ? `3px solid ${a.color}` : "3px solid transparent",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+      padding: "10px"
+    }}
+  >
+    {/* left clickable area */}
+    <div
+      onClick={() => setActive(i)}
+      style={{ cursor: "pointer", flex: 1 }}
+    >
+      <span className="lbl a-tab-id" style={{ color: active === i ? a.color : "#888" }}>
+        {a.id}
+      </span>
+      <span className="a-tab-name"> {a.name}</span>
+    </div>
+
+    {/* VIEW BUTTON */}
+    <button
+      onClick={() => setActive(i)}
+      style={{
+        border: `1px solid ${a.color}`,
+        color: a.color,
+        background: "transparent",
+        padding: "4px 10px",
+        borderRadius: 6,
+        fontSize: 12,
+        cursor: "pointer"
+      }}
+    >
+      View
+    </button>
+  </div>
+))}
           </div>
         </div>
 
@@ -322,7 +352,7 @@ export default function App() {
         </div>
 
         <div className="stack-grid" style={{ marginTop: "clamp(24px, 4vw, 48px)" }}>
-          {stack.map((s, i) => (
+          {stack.map((s) => (
             <div key={s.name} className="stack-card">
               <p className="lbl lbl-red" style={{ marginBottom: 12 }}>{s.label}</p>
               <p className="stack-name">{s.name}</p>
