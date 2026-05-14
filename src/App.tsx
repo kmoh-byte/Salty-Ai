@@ -145,8 +145,9 @@ export default function App() {
               Your best engineers know things that aren't written down anywhere. Now that knowledge stays.
             </p>
             <div className="hero-btns">
-              <button className="btn btn-dark">Explore Architecture →</button>
-              <button className="btn btn-outline">Read Docs</button>
+              <a href="#memory" className="btn btn-dark">
+  Explore Architecture →
+</a>
             </div>
           </div>
 
