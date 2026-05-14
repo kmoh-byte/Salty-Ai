@@ -187,7 +187,7 @@ export default function App() {
             <span className="lbl lbl-dim">Salty | Engineering · Knowledge Base · Memory · Filesystem</span>
           </div>
           <div className="video-shell">
-            <video src="/0508(1).mp4" controls />
+            <video src="/0508(1).mp4" controls poster="/brand.png" />
           </div>
         </div>
       </section>
